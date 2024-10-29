@@ -3,32 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-use App\Models\Barang;
-
+use App\Models\Teknisi;
 use DataTables;
 
-class BarangController extends Controller{
-
+class TeknisiController extends Controller
+{
     function index(){
-        $barang = Barang::take(5)->get();
+        $teknisi = Teknisi::take(5)->get();
         $labels = [];
         $data = [];
-        $data2 = [];
-        foreach($barang as $v){
+        foreach($teknisi as $v){
             $labels[] = $v->nama;
-            $data[] = intval($v->stok);
-            $data2[] = intval(rand(1,$v->stok));
+            $data[] = intval($v->no_hp);
         }
-        return view('barang.view', compact('data','labels','data2'));
+        return view('teknisi.view', compact('data','labels'));
     }
 
     function data(Request $req){
-        $data = Barang::select('*');
+        $data = Teknisi::select('*');
         return DataTables::of($data)
                          ->addColumn('action',function($row){
-                            $url = route('barang.edit',$row->id);
-                            $url_delete = route('barang.delete',$row->id);
+                            $url = route('teknisi.edit',$row->id);
+                            $url_delete = route('teknisi.delete',$row->id);
                             $btn =  '<button type="button" class="btn btn-warning btn-sm btn-form" data-url="'.$url.'" title="Edit Data"><i class="fa fa-edit"></i></button>';
                             $btn.=  '<button type="button" class="btn btn-danger btn-sm btn-delete" data-url="'.$url_delete.'" title="Hapus Data"><i class="fa fa-trash"></i></button>';
                             return $btn; 
@@ -37,15 +33,15 @@ class BarangController extends Controller{
     }
 
     function tambah(){
-        return view('barang.form');
+        return view('teknisi.form');
     }
     function edit($id){
-        $barang = Barang::findOrFail($id);
-        return view('barang.form',compact('barang'));
+        $teknisi = Teknisi::findOrFail($id);
+        return view('teknisi.form',compact('teknisi'));
     }
     function hapus($id){
-        $barang = Barang::findOrFail($id);
-        if($barang->delete()){
+        $teknisi = Teknisi::findOrFail($id);
+        if($teknisi->delete()){
             return response()->json(['success'=>TRUE, 'message'=>'Data Berhasil dihapus']);
         }else{
             return response()->json(['success'=>FALSE, 'message'=>'Data gagal dihapus']);
@@ -57,17 +53,15 @@ class BarangController extends Controller{
 
         $id = $req->id;
         if(empty($id)){
-            $barang = new Barang;
+            $teknisi = new Teknisi;
         }else{
-            $barang = Barang::findOrFail($id);
+            $teknisi = Teknisi::findOrFail($id);
         }
 
-        $barang->nama = $req->nama;
-        $barang->deskripsi = $req->desc;
-        $barang->harga = $req->hrg;
-        $barang->stok = $req->stok;
+        $teknisi->nama = $req->nama;
+        $teknisi->no_hp = $req->no_hp;
 
-        if($barang->save()){
+        if($teknisi->save()){
             return response()->json(['success'=>TRUE, 'message'=>'Data Berhasil disimpan']);
         }else{
             return response()->json(['success'=>FALSE, 'message'=>'Data gagal disimpan']);

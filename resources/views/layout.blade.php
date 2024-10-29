@@ -2,7 +2,7 @@
 <html lang="en"> <!--begin::Head-->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>AdminLTE 4 | Fixed Sidebar</title><!--begin::Primary Meta Tags-->
+    <title>BIG ACCESS</title><!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="title" content="AdminLTE 4 | Fixed Sidebar">
     <meta name="author" content="ColorlibHQ">
@@ -54,22 +54,34 @@
 
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark"> <!--begin::Sidebar Brand-->
             <div class="sidebar-brand"> <!--begin::Brand Link--> <a href="../index.html" class="brand-link"> <!--begin::Brand Image--> 
-                <img src="https://bmw.astra.co.id/wp-content/uploads/2023/07/BMW.svg_.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> 
-                <span class="brand-text fw-light">SIII</span> <!--end::Brand Text--> </a> <!--end::Brand Link--> 
+                <img src="https://feb.uds.ac.id/wp-content/uploads/2023/05/gmdp.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> 
+                <span class="brand-text fw-light"></span> <!--end::Brand Text--> </a> <!--end::Brand Link--> 
             </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2"> <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
                         <li class="nav-item"> 
-                            <a href="../generate/theme.html" class="nav-link"> 
+                            <a href="/dashboard" class="nav-link"> 
                                 <i class="nav-icon fa fa-dashboard"></i>
                                 <p>Dashboard</p>
                             </a> 
                         </li>
                         <li class="nav-item"> 
-                            <a href="../generate/theme.html" class="nav-link"> 
-                                <i class="nav-icon fa fa-boxes"></i>
-                                <p>Data Barang</p>
+                            <a href="/data-pelanggan" class="nav-link"> 
+                                <i class="nav-icon fa fa-users"></i>
+                                <p>Data Pelanggan</p>
+                            </a> 
+                        </li>
+                        <li class="nav-item"> 
+                            <a href="/data-teknisi" class="nav-link"> 
+                                <i class="nav-icon fa fa-tools"></i>
+                                <p>Data Teknisi</p>
+                            </a> 
+                        </li>
+                        <li class="nav-item"> 
+                            <a href="/data-redaman" class="nav-link"> 
+                                <i class="nav-icon fa fa-signal"></i>
+                                <p>Data Redaman</p>
                             </a> 
                         </li>
                     </ul> <!--end::Sidebar Menu-->
@@ -83,14 +95,14 @@
             </div>
         </main> <!--end::App Main--> <!--begin::Footer-->
 
-        <footer class="app-footer"> <!--begin::To the end-->
-            <div class="float-end d-none d-sm-inline">Anything you want</div> <!--end::To the end--> <!--begin::Copyright--> <strong>
+        <!-- <footer class="app-footer"> begin::To the end -->
+            <!-- <div class="float-end d-none d-sm-inline">Anything you want</div> end::To the end begin::Copyright <strong>
                 Copyright &copy; 2014-2024&nbsp;
                 <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
-            </strong>
-            All rights reserved.
+            </strong> -->
+            <!-- All rights reserved. -->
             <!--end::Copyright-->
-        </footer> <!--end::Footer-->
+        <!-- </footer> end::Footer -->
     </div> <!--end::App Wrapper--> <!--begin::Script--> <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/browser/overlayscrollbars.browser.es6.min.js" integrity="sha256-H2VM7BKda+v2Z4+DRy69uknwxjyDRhszjXFhsL4gD3w=" crossorigin="anonymous"></script> <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->

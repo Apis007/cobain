@@ -1,21 +1,21 @@
-<form action="" method="post" id="form-barang">
+<form action="" method="post" id="form-pelanggan">
     @csrf
-    <input type="hidden" name="id" value="{{@$barang->id}}">
+    <input type="hidden" name="id" value="{{@$pelanggan->id}}">
     <div class="form-group">
-        <label>Nama Barang</label>
-        <input type="text" name="nama" class="form-control"  value="{{@$barang->nama}}" required>
+        <label>Nama Pelanggan</label>
+        <input type="text" name="nama" class="form-control"  value="{{@$pelanggan->nama}}" required>
     </div>
     <div class="form-group">
-        <label>Harga</label>
-        <input type="number" name="hrg" class="form-control"  value="{{@$barang->harga}}" required>
+        <label>Alamat</label>
+        <input type="text" name="alamat" class="form-control"  value="{{@$pelanggan->alamat}}" required>
     </div>
     <div class="form-group">
-        <label>Stok</label>
-        <input type="number" name="stok" class="form-control"  value="{{@$barang->stok}}" required>
+        <label>Status</label>
+        <input type="text" name="status" class="form-control"  value="{{@$pelanggan->status}}" required>
     </div>
     <div class="form-group">
-        <label>Deskripsi</label>
-        <textarea name="desc" class="form-control">{{@$barang->deskripsi}}</textarea>
+        <label>Paket</label>
+        <input type="text" name="paket" class="form-control"  value="{{@$pelanggan->paket}}" required>
     </div>
     <div class="form-group text-end">
         <button class="btn btn-success">Simpan Data</button>
@@ -23,10 +23,10 @@
 </form>
 
 <script>
-    $('#form-barang').on('submit', function(ev){
+    $('#form-pelanggan').on('submit', function(ev){
         ev.preventDefault();
         $.ajax({
-            url: '{{route("barang.save")}}', type: 'POST', data: $(this).serializeArray(), dataType:'JSON',
+            url: '{{route("pelanggan.save")}}', type: 'POST', data: $(this).serializeArray(), dataType:'JSON',
             beforeSend:()=>{ $.blockUI({message:'loading bro...'}); },
             complete:()=>{ $.unblockUI(); },
             error:(e)=>{ Swal.fire("ERRORS",e.statusText,'error');},

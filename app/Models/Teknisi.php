@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
 
-class Barang extends Model{
+class Teknisi extends Model
+{
     use SoftDeletes;
     
-    protected $table = 'barang';
+    protected $table = 'teknisi';
     protected $primaryKey = 'id';
-    // public $incrementing = false;
 }
