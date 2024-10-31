@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\http\Controllers\LoginController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +19,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('login.index');
 });
+
+Route::get('/login', [LoginController::class, 'halaman_login']);
+Route::post('/login', [LoginController::class, 'login'])->name('login');
+
+Route::get('/pelanggan', function () {
+    return view('pelanggan.view');
+})->middleware('auth');
 
 Route::name('teknisi')->prefix('data-teknisi')->controller(TeknisiController::class)->group(function(){
     Route::get('/','index');

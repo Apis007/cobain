@@ -15,10 +15,10 @@ class Redaman extends Migration
     {
         Schema::create('redaman', function (Blueprint $table) {
             $table->id();
-            $table->string('port', 100);
-            $table->string('redaman', 100);
+            $table->string('port', 255);
+            $table->string('redaman', 255);
             $table->integer('id_pelanggan');
-            $table->string('nama', 100);
+            $table->string('nama', 255);
             $table->string('alamat', 255);
             $table->string('paket', 50);
             $table->timestamps();

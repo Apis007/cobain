@@ -18,7 +18,7 @@ class Pelanggan extends Model{
 
     public function redaman()
 {
-    return $this->hasMany(Redaman::class);
+    return $this->hasMany(Redaman::class, 'id');
 }
 
 public function teknisi()

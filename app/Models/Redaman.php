@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Redaman extends Model
 {
     use SoftDeletes;
+    public $timestamps = true;
     
     protected $table = 'redaman';
     protected $primaryKey = 'id';
@@ -31,7 +32,7 @@ class Redaman extends Model
     //     });
     // }
 
-    public function pelanggan()
+    function pelanggan()
     {
         return $this->belongsTo(Pelanggan::class, 'id_pelanggan');
     }

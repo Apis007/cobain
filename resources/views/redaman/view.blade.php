@@ -60,7 +60,7 @@
                 {data:'nama'},
                 {data:'alamat'},
                 {data:'paket'},
-                {data:'action'},
+                {data:'created_at'},
             ]
         });
         $(document).on('click','.btn-form',function(){

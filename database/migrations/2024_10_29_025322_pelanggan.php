@@ -16,7 +16,7 @@ class Pelanggan extends Migration
         Schema::create('pelanggan', function (Blueprint $table) {
             $table->id();
             $table->string('nama', 255);
-            $table->string('alamat', 13);
+            $table->string('alamat', 255);
             $table->enum('status', ['normal', 'promo']);
             $table->bigInteger('paket');
             $table->timestamps();
