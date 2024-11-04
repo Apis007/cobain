@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Pelanggan;
+use App\Models\Redaman;
+use Illuminate\Support\Facades\DB;
 
 use DataTables;
 
@@ -49,7 +51,11 @@ class PelangganController extends Controller{
     }
     function detail($id){
         $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.formdetail',compact('pelanggan'));
+        $chartData = Redaman::where('id_pelanggan', $id)
+    ->get([DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as tanggal'), 'redaman']);
+
+
+        return view('pelanggan.formdetail',compact('pelanggan', 'chartData'));
     }
     function hapus($id){
         $pelanggan = Pelanggan::findOrFail($id);
