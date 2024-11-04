@@ -9,6 +9,7 @@ use DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Validator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class RedamanController extends Controller
 {
@@ -33,6 +34,7 @@ class RedamanController extends Controller
 {
     $request->validate([
         'file' => 'required|mimes:xlsx,xls',
+        'importDate' => 'nullable|date',
     ]);
 
     try {
@@ -45,48 +47,60 @@ class RedamanController extends Controller
         $importedCount = 0;
         $skippedCount = 0;
 
+        $selectedDate = $request->input('importDate') 
+            ? Carbon::parse($request->input('importDate'))->startOfDay() 
+            : Carbon::now();
+
         foreach ($rows as $row) {
             if (empty($row[0]) && empty($row[1]) && empty($row[2])) {
-                continue; // Lewati baris kosong
+                $skippedCount++;
+                continue;
             }
 
-            // Menggunakan Carbon untuk memanipulasi tanggal
-            $currentDate = Carbon::now();
-
+            // Jika kolom paket kosong, berikan nilai default 1
             $data = [
-                'port'    => $row[0],
-                'redaman' => $row[1],
+                'port'         => $row[0],
+                'redaman'      => $row[1],
                 'id_pelanggan' => $row[2],
-                'nama'    => $row[3],
-                'alamat'  => $row[4],
-                'paket'   => $row[5],
-                'created_at' => $currentDate,
-                'updated_at' => $currentDate
+                'nama'         => $row[3] ?? 'Tidak Diketahui',
+                'alamat'       => $row[4] ?? 'Alamat Tidak Diketahui',
+                'paket'        => $row[5] ?? 0, // Default ke 0 jika kosong
+                'created_at'   => $selectedDate,
+                'updated_at'   => $selectedDate
             ];
+
+            // Cek apakah pelanggan sudah ada di tabel pelanggan berdasarkan kolom `id`
+            $pelanggan = Pelanggan::find($row[2]);
+
+            // Jika pelanggan belum ada, tambahkan pelanggan baru
+            if (!$pelanggan) {
+                $pelanggan = Pelanggan::create([
+                    'nama'       => $row[3] ?? 'Tidak Diketahui',
+                    'alamat'     => $row[4] ?? 'Alamat Tidak Diketahui',
+                    'paket'      => $data['paket'], // Gunakan nilai paket yang sudah dicek
+                    'created_at' => $selectedDate,
+                    'updated_at' => $selectedDate
+                ]);
+
+                // Gunakan ID pelanggan baru untuk id_pelanggan
+                $data['id_pelanggan'] = $pelanggan->id;
+            }
 
             // Simpan data redaman
             Redaman::create($data);
             $importedCount++;
-
-            // Cek apakah pelanggan sudah ada di tabel pelanggan
-        //     $pelanggan = Pelanggan::find($data['id']);
-        //     if (!$pelanggan) {
-        //         // Jika pelanggan belum ada, buat pelanggan baru
-        //         Pelanggan::create([
-        //             'id' => $data['id_pelanggan'],
-        //             'nama' => $data['nama'],
-        //             'alamat' => $data['alamat'],
-        //             'paket' => $data['paket'],
-        //             'status' => $data['status'],
-        //             'created_at' => $currentDate,
-        //             'updated_at' => $currentDate
-        //         ]);
-        //     }
         }
 
-        return redirect()->back()->with('success', "Berhasil mengimpor $importedCount data redaman dan pelanggan.");
+        return response()->json([
+            'success' => true, 
+            'message' => "Berhasil mengimpor $importedCount data redaman, $skippedCount data dilewati karena kosong."
+        ]);
     } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        \Log::error('Kesalahan saat impor data redaman: ' . $e->getMessage());
+        return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
     }
 }
-}
+
+
+
+    }

@@ -9,31 +9,22 @@ class Redaman extends Model
 {
     use SoftDeletes;
     public $timestamps = true;
-    
+
     protected $table = 'redaman';
     protected $primaryKey = 'id';
-    // public $incrementing = false;
+
     protected $fillable = [
         'port',
         'redaman',
-        'id_pelanggan',
+        'id_pelanggan', // Kolom ini akan digunakan sebagai referensi ke `id` di `pelanggan`
         'nama',
         'alamat',
         'paket',
     ];
 
-    // Tambahkan ini untuk melihat query yang dijalankan
-    // protected static function boot()
-    // {
-    //     parent::boot();
-        
-    //     static::creating(function ($model) {
-    //         \Log::info("Creating new redaman:", $model->toArray());
-    //     });
-    // }
-
-    function pelanggan()
+    // Relasi ke model Pelanggan tanpa foreign key constraint
+    public function pelanggan()
     {
-        return $this->belongsTo(Pelanggan::class, 'id_pelanggan');
+        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id');
     }
 }

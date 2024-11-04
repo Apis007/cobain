@@ -20,7 +20,7 @@ class Redaman extends Migration
             $table->integer('id_pelanggan');
             $table->string('nama', 255);
             $table->string('alamat', 255);
-            $table->string('paket', 50);
+            $table->string('paket', 50)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
