@@ -31,8 +31,10 @@ class PelangganController extends Controller{
                          ->addColumn('action',function($row){
                             $url = route('pelanggan.edit',$row->id);
                             $url_delete = route('pelanggan.delete',$row->id);
+                            $url_detail = route('pelanggan.detail',$row->id);
                             $btn =  '<button type="button" class="btn btn-warning btn-sm btn-form" data-url="'.$url.'" title="Edit Data"><i class="fa fa-edit"></i></button>';
                             $btn.=  '<button type="button" class="btn btn-danger btn-sm btn-delete" data-url="'.$url_delete.'" title="Hapus Data"><i class="fa fa-trash"></i></button>';
+                            $btn.=  '<button type="button" class="btn btn-primary btn-sm btn-detail" data-url="'.$url_detail.'" title="Detail Data"><i class="fa fa-eye"></i></button>';
                             return $btn; 
                          })
                          ->toJson();
@@ -44,6 +46,10 @@ class PelangganController extends Controller{
     function edit($id){
         $pelanggan = Pelanggan::findOrFail($id);
         return view('pelanggan.form',compact('pelanggan'));
+    }
+    function detail($id){
+        $pelanggan = Pelanggan::findOrFail($id);
+        return view('pelanggan.formdetail',compact('pelanggan'));
     }
     function hapus($id){
         $pelanggan = Pelanggan::findOrFail($id);

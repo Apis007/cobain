@@ -75,6 +75,7 @@ class RedamanController extends Controller
             // Jika pelanggan belum ada, tambahkan pelanggan baru
             if (!$pelanggan) {
                 $pelanggan = Pelanggan::create([
+                    'id'         => $row[2],
                     'nama'       => $row[3] ?? 'Tidak Diketahui',
                     'alamat'     => $row[4] ?? 'Alamat Tidak Diketahui',
                     'paket'      => $data['paket'], // Gunakan nilai paket yang sudah dicek
@@ -83,7 +84,7 @@ class RedamanController extends Controller
                 ]);
 
                 // Gunakan ID pelanggan baru untuk id_pelanggan
-                $data['id_pelanggan'] = $pelanggan->id;
+                // $data['id_pelanggan'] = $pelanggan->id;
             }
 
             // Simpan data redaman

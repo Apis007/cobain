@@ -13,6 +13,7 @@
                     <tr>
                         <th>Nama</th>
                         <th>No Hp</th>
+                        <th>Alamat</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -52,6 +53,7 @@
             columns:[
                 {data:'nama'},
                 {data:'no_hp'},
+                {data:'alamat'},
                 {data:'action'},
             ]
         });

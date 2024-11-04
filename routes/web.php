@@ -42,6 +42,7 @@ Route::name('pelanggan')->prefix('data-pelanggan')->controller(PelangganControll
     Route::get('/tambah-data','tambah')->name('.add');
     Route::get('/ubah/{id}/data','edit')->name('.edit');    
     Route::get('/hapus/{id}/data','hapus')->name('.delete');
+    Route::get('/detail/{id}/data','detail')->name('.detail');
     Route::post('/simpan-data','simpan')->name('.save');
 });
 

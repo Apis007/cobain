@@ -11,12 +11,14 @@ class TeknisiController extends Controller
     function index(){
         $teknisi = Teknisi::take(5)->get();
         $labels = [];
+        $label = [];
         $data = [];
         foreach($teknisi as $v){
             $labels[] = $v->nama;
             $data[] = intval($v->no_hp);
+            $label[] = $v->alamat;
         }
-        return view('teknisi.view', compact('data','labels'));
+        return view('teknisi.view', compact('data','labels','label'));
     }
 
     function data(Request $req){
@@ -60,6 +62,7 @@ class TeknisiController extends Controller
 
         $teknisi->nama = $req->nama;
         $teknisi->no_hp = $req->no_hp;
+        $teknisi->alamat = $req->alamat;
 
         if($teknisi->save()){
             return response()->json(['success'=>TRUE, 'message'=>'Data Berhasil disimpan']);

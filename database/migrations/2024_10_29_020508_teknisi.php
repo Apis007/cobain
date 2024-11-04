@@ -17,6 +17,7 @@ class Teknisi extends Migration
             $table->id();
             $table->string('nama', 255);
             $table->string('no_hp', 13);
+            $table->string('alamat', 255);
             $table->timestamps();
             $table->softDeletes();
         });

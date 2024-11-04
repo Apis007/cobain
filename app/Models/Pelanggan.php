@@ -13,6 +13,7 @@ class Pelanggan extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
+        'id',
         'nama',
         'alamat',
         'status',

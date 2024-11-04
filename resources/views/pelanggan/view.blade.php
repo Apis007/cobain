@@ -104,5 +104,25 @@
                 }
             });
         });
+        $(document).on('click', '.btn-detail', function(){
+    let title = $(this).prop('title') ?? 'Detail Data';
+    let url = $(this).data('url');
+    let modal = $('#modal-form');
+    modal.find('.modal-title').html(title);
+    modal.find('.modal-body').html('<center><i class="fa fa-spinner fa-spin"></i> <i>loading...</i></center>');
+    modal.modal('show');
+    
+    $.ajax({
+        url: url,
+        type: 'GET',
+        error: (e) => { 
+            Swal.fire("ERROR", "Gagal memuat data untuk detail", 'error'); 
+            setTimeout(() => { modal.modal('hide'); }, 500);  
+        },
+        success: (r) => {
+            modal.find('.modal-body').html(r);
+        }
+    });
+});
     </script>
 @endpush

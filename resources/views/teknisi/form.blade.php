@@ -8,6 +8,9 @@
     <div class="form-group">
         <label>No Hp</label>
         <input type="number" name="no_hp" class="form-control"  value="{{@$teknisi->no_hp}}" required>
+    <div class="form-group">
+        <label>Alamat</label>
+        <input type="text" name="alamat" class="form-control"  value="{{@$teknisi->alamat}}" required>
     <div class="form-group text-end">
         <button class="btn btn-success">Simpan Data</button>
     </div>
