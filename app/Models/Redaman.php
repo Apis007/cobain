@@ -20,6 +20,7 @@ class Redaman extends Model
         'nama',
         'alamat',
         'paket',
+        'created_at',
     ];
 
     // Relasi ke model Pelanggan tanpa foreign key constraint

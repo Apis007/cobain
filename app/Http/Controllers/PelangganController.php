@@ -87,4 +87,5 @@ class PelangganController extends Controller{
             return response()->json(['success'=>FALSE, 'message'=>'Data gagal disimpan']);
         }
     }
+    
 }

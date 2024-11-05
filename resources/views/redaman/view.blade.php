@@ -83,7 +83,17 @@
                 { data: 'nama' },
                 { data: 'alamat' },
                 { data: 'paket' },
-                { data: 'created_at' }
+                { 
+            data: 'created_at',
+            render: function(data) {
+                // Memformat tanggal dengan JavaScript Date
+                if(data) {
+                    const options = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+                    return new Date(data).toLocaleDateString('id-ID', options);
+                }
+                return '';
+            }
+        }
             ]
         });
 
@@ -104,37 +114,44 @@
             });
 
             // Kirim form menggunakan AJAX
-            $('#form-redaman').on('submit', function(ev) {
-                ev.preventDefault(); // Mencegah pengiriman form standar
+            // Kirim form menggunakan AJAX
+$('#form-redaman').on('submit', function(ev) {
+    ev.preventDefault(); // Mencegah pengiriman form standar
 
-                let formData = new FormData(this); // Membuat objek FormData untuk mengirim file dan data lainnya
+    let formData = new FormData(this); // Membuat objek FormData untuk mengirim file dan data lainnya
+    let submitButton = $(this).find('button[type="submit"]'); // Ambil tombol submit
 
-                $.ajax({
-                    url: '{{ route("redaman.import") }}', // Rute ke fungsi import di controller
-                    type: 'POST',
-                    data: formData,
-                    processData: false, // Mencegah jQuery memproses data
-                    contentType: false, // Mencegah jQuery mengatur tipe konten
-                    beforeSend: () => {
-                        $.blockUI({ message: 'Mengimpor data...' });
-                    },
-                    complete: () => {
-                        $.unblockUI();
-                    },
-                    success: (response) => {
-                        if(response.success) {
-                            $('#modal-form').modal('hide');
-                            Swal.fire("SUCCESS", response.message, 'success');
-                            tbl.ajax.reload(); // Reload tabel untuk menampilkan data yang diimpor
-                        } else {
-                            Swal.fire("ERROR", response.message, 'error');
-                        }
-                    },
-                    error: (xhr, status, error) => {
-                        Swal.fire("ERROR", xhr.responseText, 'error');
-                    }
-                });
-            });
+    // Disable tombol setelah diklik
+    submitButton.prop('disabled', true);
+
+    $.ajax({
+        url: '{{ route("redaman.import") }}', // Rute ke fungsi import di controller
+        type: 'POST',
+        data: formData,
+        processData: false, // Mencegah jQuery memproses data
+        contentType: false, // Mencegah jQuery mengatur tipe konten
+        beforeSend: () => {
+            $.blockUI({ message: 'Mengimpor data...' });
+        },
+        complete: () => {
+            $.unblockUI();
+            submitButton.prop('disabled', false); // Aktifkan kembali tombol setelah proses selesai
+        },
+        success: (response) => {
+            if(response.success) {
+                $('#modal-form').modal('hide');
+                Swal.fire("SUCCESS", response.message, 'success');
+                tbl.ajax.reload(); // Reload tabel untuk menampilkan data yang diimpor
+            } else {
+                Swal.fire("ERROR", response.message, 'error');
+            }
+        },
+        error: (xhr, status, error) => {
+            Swal.fire("ERROR", xhr.responseText, 'error');
+        }
+    });
+});
+
         });
     </script>
 @endpush

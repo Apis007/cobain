@@ -22,6 +22,7 @@ Route::get('/', function () {
 
 Route::get('/login', [LoginController::class, 'halaman_login']);
 Route::post('/login', [LoginController::class, 'login'])->name('login');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/pelanggan', function () {
     return view('pelanggan.view');
