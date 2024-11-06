@@ -47,9 +47,10 @@ class RedamanController extends Controller
         $importedCount = 0;
         $skippedCount = 0;
 
-        $selectedDate = $request->input('importDate') 
-            ? Carbon::parse($request->input('importDate'))->startOfDay() 
-            : Carbon::now();
+        $selectedDate = $request->filled('importDate')
+         ? Carbon::parse($request->input('importDate'))->timezone('Asia/Jakarta') // Pastikan ini menangani waktu dengan benar
+         : Carbon::now()->timezone('Asia/Jakarta');
+
 
         foreach ($rows as $row) {
             if (empty($row[0]) && empty($row[1]) && empty($row[2])) {
@@ -82,9 +83,6 @@ class RedamanController extends Controller
                     'created_at' => $selectedDate,
                     'updated_at' => $selectedDate
                 ]);
-
-                // Gunakan ID pelanggan baru untuk id_pelanggan
-                // $data['id_pelanggan'] = $pelanggan->id;
             }
 
             // Simpan data redaman

@@ -5,7 +5,7 @@
             <h4 class="card-title">Data Redaman</h4>
             <div class="card-tools d-flex">
                 <!-- Input tanggal untuk memilih tanggal impor -->
-                <input type="date" id="importDate" name="importDate" class="form-control me-2" style="width: 180px;" placeholder="Pilih Tanggal">
+                <input type="datetime-local" id="importDate" name="importDate" class="form-control me-2" style="width: 180px;" placeholder="Pilih Tanggal">
                 
                 <!-- Tombol Import yang membuka form impor dalam modal -->
                 <button class="btn btn-sm btn-success btn-form" title="Import Data">
@@ -83,17 +83,24 @@
                 { data: 'nama' },
                 { data: 'alamat' },
                 { data: 'paket' },
-                { 
-            data: 'created_at',
-            render: function(data) {
-                // Memformat tanggal dengan JavaScript Date
-                if(data) {
-                    const options = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-                    return new Date(data).toLocaleDateString('id-ID', options);
+                {
+                    data: 'created_at',
+                    render: function (data) {
+                        if (data) {
+                            const options = {
+                                day: '2-digit',
+                                month: 'long',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false
+                            };
+                            return new Date(data).toLocaleString('id-ID', options); // Menampilkan waktu dalam format Indonesia
+                        }
+                        return '';
+                    }
                 }
-                return '';
-            }
-        }
+
             ]
         });
 
