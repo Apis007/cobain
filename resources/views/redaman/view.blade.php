@@ -5,7 +5,7 @@
             <h4 class="card-title">Data Redaman</h4>
             <div class="card-tools d-flex">
                 <!-- Input tanggal untuk memilih tanggal impor -->
-                <input type="datetime-local" id="importDate" name="importDate" class="form-control me-2" style="width: 180px;" placeholder="Pilih Tanggal">
+                <input type="date" id="importDate" name="importDate" class="form-control me-2" style="width: 180px;" placeholder="Pilih Tanggal">
                 
                 <!-- Tombol Import yang membuka form impor dalam modal -->
                 <button class="btn btn-sm btn-success btn-form" title="Import Data">
@@ -68,97 +68,99 @@
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Inisialisasi DataTable
-        var tbl = new DataTable('#datatable', {
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '{{ route("redaman.data") }}',
-                type: 'POST'
-            },
-            columns: [
-                { data: 'port' },
-                { data: 'redaman' },
-                { data: 'id_pelanggan' },
-                { data: 'nama' },
-                { data: 'alamat' },
-                { data: 'paket' },
-                {
-                    data: 'created_at',
-                    render: function (data) {
-                        if (data) {
-                            const options = {
-                                day: '2-digit',
-                                month: 'long',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: false
-                            };
-                            return new Date(data).toLocaleString('id-ID', options); // Menampilkan waktu dalam format Indonesia
-                        }
-                        return '';
-                    }
-                }
-
-            ]
-        });
-
         $(document).ready(function() {
-            // Ketika tombol import diklik, cek apakah tanggal sudah dipilih
+            // Inisialisasi DataTable dengan parameter AJAX
+            var tbl = new DataTable('#datatable', {
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ route("redaman.data") }}',
+                    type: 'POST',
+                    data: function (d) {
+                        d.filterDate = $('#importDate').val(); // Kirim tanggal terpilih sebagai parameter
+                        d._token = '{{ csrf_token() }}'; // Sertakan token CSRF
+                    }
+                },
+                columns: [
+                    { data: 'port' },
+                    { data: 'redaman' },
+                    { data: 'id_pelanggan' },
+                    { data: 'nama' },
+                    { data: 'alamat' },
+                    { data: 'paket' },
+                    {
+                        data: 'created_at',
+                        render: function (data) {
+                            if (data) {
+                                const options = {
+                                    day: '2-digit',
+                                    month: 'long',
+                                    year: 'numeric',
+                                };
+                                return new Date(data).toLocaleString('id-ID', options);
+                            }
+                            return '';
+                        }
+                    }
+                ]
+            });
+
+            // Ketika tanggal diubah, muat ulang DataTable dengan filter baru
+            $('#importDate').on('change', function() {
+                tbl.ajax.reload(); // Muat ulang tabel dengan filter tanggal baru
+            });
+
+            // Ketika tombol Import diklik, pastikan tanggal dipilih dan valid
             $(document).on('click', '.btn-form', function() {
-                let selectedDate = $('#importDate').val(); // Ambil tanggal dari input utama
+                let selectedDate = $('#importDate').val();
+                let today = new Date().toISOString().split('T')[0];
 
                 if (!selectedDate) {
-                    // Tampilkan pesan error jika tanggal belum dipilih
                     Swal.fire("ERROR", "Silakan pilih tanggal impor terlebih dahulu!", 'error');
                     return;
                 }
 
-                // Set tanggal yang dipilih ke input hidden di form modal
-                $('#importDateInput').val(selectedDate);
+                if (selectedDate > today) {
+                    Swal.fire("ERROR", "Urong wayae Boss!", 'error');
+                    return;
+                }
+
+                $('#importDateInput').val(selectedDate); // Set tanggal ke input hidden di form modal
                 $('#modal-form').modal('show'); // Tampilkan modal
             });
 
             // Kirim form menggunakan AJAX
-            // Kirim form menggunakan AJAX
-$('#form-redaman').on('submit', function(ev) {
-    ev.preventDefault(); // Mencegah pengiriman form standar
+            $('#form-redaman').on('submit', function(ev) {
+                ev.preventDefault(); // Mencegah pengiriman form standar
 
-    let formData = new FormData(this); // Membuat objek FormData untuk mengirim file dan data lainnya
-    let submitButton = $(this).find('button[type="submit"]'); // Ambil tombol submit
+                let formData = new FormData(this); // Membuat objek FormData untuk mengirim file dan data lainnya
 
-    // Disable tombol setelah diklik
-    submitButton.prop('disabled', true);
-
-    $.ajax({
-        url: '{{ route("redaman.import") }}', // Rute ke fungsi import di controller
-        type: 'POST',
-        data: formData,
-        processData: false, // Mencegah jQuery memproses data
-        contentType: false, // Mencegah jQuery mengatur tipe konten
-        beforeSend: () => {
-            $.blockUI({ message: 'Mengimpor data...' });
-        },
-        complete: () => {
-            $.unblockUI();
-            submitButton.prop('disabled', false); // Aktifkan kembali tombol setelah proses selesai
-        },
-        success: (response) => {
-            if(response.success) {
-                $('#modal-form').modal('hide');
-                Swal.fire("SUCCESS", response.message, 'success');
-                tbl.ajax.reload(); // Reload tabel untuk menampilkan data yang diimpor
-            } else {
-                Swal.fire("ERROR", response.message, 'error');
-            }
-        },
-        error: (xhr, status, error) => {
-            Swal.fire("ERROR", xhr.responseText, 'error');
-        }
-    });
-});
-
+                $.ajax({
+                    url: '{{ route("redaman.import") }}', // Rute ke fungsi import di controller
+                    type: 'POST',
+                    data: formData,
+                    processData: false, // Mencegah jQuery memproses data
+                    contentType: false, // Mencegah jQuery mengatur tipe konten
+                    beforeSend: () => {
+                        $.blockUI({ message: 'Mengimpor data...' });
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                    },
+                    success: (response) => {
+                        if(response.success){
+                            $('#modal-form').modal('hide');
+                            Swal.fire("SUCCESS", response.message, 'success');
+                            tbl.ajax.reload(); // Reload tabel untuk menampilkan data yang diimpor
+                        } else {
+                            Swal.fire("ERROR", response.message, 'error');
+                        }
+                    },
+                    error: (xhr, status, error) => {
+                        Swal.fire("ERROR", xhr.responseText, 'error');
+                    }
+                });
+            });
         });
     </script>
 @endpush

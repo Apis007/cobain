@@ -13,7 +13,7 @@
 
     <style>
         #redamanChart {
-            margin-top: 20px; 
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -44,71 +44,75 @@
     <canvas id="redamanChart" width="400" height="200"></canvas>
 
     <script>
-        $(document).ready(function() {
-            // Mengambil data dari server dan mengurutkan berdasarkan tanggal
-            const pelangganChartData = @json($chartData).sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
+    $(document).ready(function() {
+        // Mengambil data dari server dan mengurutkan berdasarkan tanggal
+        const pelangganChartData = @json($chartData)
+            .sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
 
-            const labels = ["", ...pelangganChartData.map(item => item.tanggal)];
-            const dataRedaman = [0, ...pelangganChartData.map(item => parseFloat(item.redaman))];
+        // Tentukan tanggal batas (5 hari terakhir dari hari ini)
+        const batasTanggal = moment().subtract(5, 'days').startOf('day');
 
-            const ctx = document.getElementById('redamanChart').getContext('2d');
-            const redamanChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Data Redaman',
-                        data: [],
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderWidth: 2,
-                        fill: false,
-                        radius: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    interaction: { intersect: false },
-                    plugins: { legend: { display: true } },
-                    scales: {
-                        x: {
-                            type: 'category',
-                            title: {
-                                display: true,
-                                text: 'Tanggal'
-                            }
+        // Filter data untuk hanya menampilkan data dalam 5 hari terakhir
+        const filteredData = pelangganChartData.filter(item => 
+            moment(item.tanggal).isSameOrAfter(batasTanggal)
+        );
+
+        // Tetap menggunakan semua label, tapi hanya menampilkan data 5 hari terakhir
+        const labels = pelangganChartData.map(item => item.tanggal);
+        const dataRedaman = pelangganChartData.map(item => parseFloat(item.redaman));
+
+        // Ambil hanya 5 data terakhir
+        const recentLabels = labels.slice(-5);
+        const recentDataRedaman = dataRedaman.slice(-5);
+
+        // Inisialisasi Chart.js
+        const ctx = document.getElementById('redamanChart').getContext('2d');
+        const redamanChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: recentLabels, // Menampilkan 5 label terakhir
+                datasets: [{
+                    label: 'Data Redaman',
+                    data: recentDataRedaman, // Menampilkan 5 data terakhir
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2,
+                    fill: false,
+                    radius: 5, // Menampilkan titik (radius = 5)
+                    pointBackgroundColor: 'rgba(75, 192, 192, 1)', // Warna titik
+                    pointBorderColor: '#fff', // Warna border titik
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                interaction: { intersect: false },
+                plugins: { legend: { display: true } },
+                scales: {
+                    x: {
+                        type: 'category',
+                        title: {
+                            display: true,
+                            text: 'Tanggal'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Redaman'
                         },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Redaman'
-                            },
-                            beginAtZero: true,
-                            reverse: true,
-                            grid: {
-                                drawBorder: true,
-                                color: 'rgba(200, 200, 200, 0.3)'
-                            }
+                        beginAtZero: true,
+                        reverse: true,
+                        grid: {
+                            drawBorder: true,
+                            color: 'rgba(200, 200, 200, 0.3)'
                         }
                     }
                 }
-            });
-
-            let index = 0;
-
-            function addData() {
-                if (index < labels.length) {
-                    redamanChart.data.labels.push(labels[index]);
-                    redamanChart.data.datasets[0].data.push(dataRedaman[index]);
-                    redamanChart.update();
-                    index++;
-                } else {
-                    clearInterval(interval);
-                }
             }
-
-            const interval = setInterval(addData, 500);
         });
-    </script>
+    });
+</script>
+    
 </body>
 </html>

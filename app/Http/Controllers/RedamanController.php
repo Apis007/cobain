@@ -18,13 +18,28 @@ class RedamanController extends Controller
         return view('redaman.view');
     }
 
-    function data(Request $req){
-        $data = Redaman::select('*');
-        return DataTables::of($data)
-                         ->addColumn('action',function($row){
-                         })
-                         ->toJson();
+    function data(Request $req)
+{
+    // Inisialisasi query
+    $query = Redaman::select('*');
+
+    if ($req->has('filterDate') && !empty($req->filterDate)) {
+        $date = Carbon::parse($req->filterDate)->startOfDay();  // Memulai dari awal hari
+        $nextDate = $date->copy()->endOfDay();  // Berakhir di akhir hari
+
+        // Filter data antara tanggal yang dipilih, dari awal hari hingga akhir hari
+        $query->whereBetween('created_at', [$date, $nextDate]);
     }
+
+    // Mengembalikan data dalam format JSON yang digunakan oleh DataTable
+    return DataTables::of($query)
+                     ->addColumn('action', function($row){
+                         // Tindakan lainnya
+                     })
+                     ->toJson();
+}
+
+    
 
     function tambah(){
         return view('redaman.form');
